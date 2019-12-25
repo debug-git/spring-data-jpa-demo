@@ -28,7 +28,5 @@ spring:
 
 # 日志
 logging:
-  file: log/project.log   #写路径时前面不加斜杠表示在项目路径下的log文件夹
   level:
-    root: info  #日志级别
-    com.example.mpdemo.mapper: debug
+    com.example.jpademo: DEBUG

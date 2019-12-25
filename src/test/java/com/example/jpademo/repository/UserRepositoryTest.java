@@ -6,6 +6,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.Date;
@@ -31,7 +32,13 @@ public class UserRepositoryTest {
     public void testFind(){
         User user = userRepository.findByUserId(3);
         System.out.println(user);
-        Optional<User> all = userRepository.findOne(Example.of(new User().setUserId(2)));
+        ExampleMatcher matcher = ExampleMatcher.matching()
+                .withMatcher("userName", ExampleMatcher.GenericPropertyMatchers.startsWith())//模糊查询匹配开头，即{username}%
+                .withMatcher("phone", ExampleMatcher.GenericPropertyMatchers.contains())//全部模糊查询，即%{address}%
+                .withIgnorePaths("password")    //忽略字段，即不管password是什么值都不加入查询条件
+                .withIgnorePaths("id");
+        Example<User> example = Example.of(new User().setUserId(2), matcher);
+        Optional<User> all = userRepository.findOne(example);
         System.out.println(all.get());
     }
 
